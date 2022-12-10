@@ -36,7 +36,7 @@
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
               "apiKeyExpirationDays": 7,
-              "apiKeyExpirationDate": "2022-12-02T06:25:35.805Z",
+              "apiKeyExpirationDate": "2022-12-16T08:56:10.588Z",
               "description": "demo"
             }
           },
