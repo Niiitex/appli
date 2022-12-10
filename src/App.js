@@ -83,7 +83,7 @@ function App() {
           ))
         }
       </div>
-      <button onClick={() => signOut()}>Log Out</button>
+      <button onClick={() => signOut()}>Se déconnecter</button>
     </div>
   );
 }

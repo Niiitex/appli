@@ -8,16 +8,28 @@
 import * as React from "react";
 import { fetchByPath, validateField } from "./utils";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Button, Flex, Grid } from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 export default function NewForm1(props) {
   const { onSubmit, onCancel, onValidate, onChange, overrides, ...rest } =
     props;
-  const initialValues = {};
+  const initialValues = {
+    jkn: undefined,
+    description: undefined,
+  };
+  const [jkn, setJkn] = React.useState(initialValues.jkn);
+  const [description, setDescription] = React.useState(
+    initialValues.description
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
+    setJkn(initialValues.jkn);
+    setDescription(initialValues.description);
     setErrors({});
   };
-  const validations = {};
+  const validations = {
+    jkn: [{ type: "Required" }],
+    description: [],
+  };
   const runValidationTasks = async (fieldName, value) => {
     let validationResponse = validateField(value, validations[fieldName]);
     const customValidator = fetchByPath(onValidate, fieldName);
@@ -35,7 +47,10 @@ export default function NewForm1(props) {
       padding="20px"
       onSubmit={async (event) => {
         event.preventDefault();
-        const modelFields = {};
+        const modelFields = {
+          jkn,
+          description,
+        };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
@@ -60,6 +75,51 @@ export default function NewForm1(props) {
       {...rest}
       {...getOverrideProps(overrides, "NewForm1")}
     >
+      <TextField
+        label="Nom"
+        isRequired={true}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              jkn: value,
+              description,
+            };
+            const result = onChange(modelFields);
+            value = result?.jkn ?? value;
+          }
+          if (errors.jkn?.hasError) {
+            runValidationTasks("jkn", value);
+          }
+          setJkn(value);
+        }}
+        onBlur={() => runValidationTasks("jkn", jkn)}
+        errorMessage={errors.jkn?.errorMessage}
+        hasError={errors.jkn?.hasError}
+        {...getOverrideProps(overrides, "jkn")}
+      ></TextField>
+      <TextField
+        label="Description"
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              jkn,
+              description: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.description ?? value;
+          }
+          if (errors.description?.hasError) {
+            runValidationTasks("description", value);
+          }
+          setDescription(value);
+        }}
+        onBlur={() => runValidationTasks("description", description)}
+        errorMessage={errors.description?.errorMessage}
+        hasError={errors.description?.hasError}
+        {...getOverrideProps(overrides, "description")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
