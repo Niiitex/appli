@@ -58,8 +58,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Mes Notes</h1>
-      <input
+      <h1>Mes documents</h1>
+      <div><input
         onChange={e => setFormData({ ...formData, 'name': e.target.value})}
         placeholder="Nom du fichier"
         value={formData.name}
@@ -67,8 +67,8 @@ function App() {
       <input
           type="file"
           onChange={onChange}
-        />
-      <button onClick={createNote}>Publier le fichier</button>
+        /></div>
+      <div style={{marginTop: 20}}><button onClick={createNote}>Publier le fichier</button></div>
       <div style={{marginBottom: 30}}>
         {
           notes.map(note => (
