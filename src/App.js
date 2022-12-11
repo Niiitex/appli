@@ -13,16 +13,13 @@ function App() {
   const [notes, setNotes] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
+  useEffect(() => { fetchNotes(); }, []);
 
   async function onChange(e) {
       if (!e.target.files[0]) return
       const file = e.target.files[0];
       setFormData({ ...formData, image: file.name });
       await Storage.put(file.name, file);
-      fetchNotes();
     }
     
   async function fetchNotes() {
@@ -39,7 +36,7 @@ function App() {
     }
 
   async function createNote() {
-      if (!formData.name) return;
+      if (!formData.name || !formData.image) return;
       await API.graphql({ query: createNoteMutation, variables: { input: formData } });
       if (formData.image) {
         const image = await Storage.get(formData.image);
@@ -47,6 +44,7 @@ function App() {
       }
       setNotes([ ...notes, formData ]);
       setFormData(initialFormState);
+      fetchNotes();
     }
 
   async function deleteNote({ id }) {
@@ -64,7 +62,7 @@ function App() {
         placeholder="Nom du fichier"
         value={formData.name}
       />
-      <input
+      <input style={{marginLeft: 20}}
           type="file"
           onChange={onChange}
         /></div>
